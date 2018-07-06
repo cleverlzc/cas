@@ -1,5 +1,10 @@
 package org.apereo.cas.audit;
 
+import org.apereo.cas.couchbase.core.CouchbaseClientFactory;
+import org.apereo.cas.util.CollectionUtils;
+import org.apereo.cas.util.DateTimeUtils;
+import org.apereo.cas.util.serialization.StringSerializer;
+
 import com.couchbase.client.java.document.StringDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import com.couchbase.client.java.query.N1qlQuery;
@@ -10,12 +15,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apereo.cas.couchbase.core.CouchbaseClientFactory;
-import org.apereo.cas.util.CollectionUtils;
-import org.apereo.cas.util.DateTimeUtils;
-import org.apereo.cas.util.serialization.StringSerializer;
 import org.apereo.inspektr.audit.AuditActionContext;
-import org.apereo.inspektr.audit.AuditTrailManager;
 
 import java.io.StringWriter;
 import java.time.LocalDate;
@@ -23,13 +23,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import static com.couchbase.client.java.query.Select.select;
-import static com.couchbase.client.java.query.dsl.Expression.i;
-import static com.couchbase.client.java.query.dsl.Expression.x;
+import static com.couchbase.client.java.query.Select.*;
+import static com.couchbase.client.java.query.dsl.Expression.*;
 
 /**
  * This is {@link CouchbaseAuditTrailManager}.
@@ -40,7 +37,7 @@ import static com.couchbase.client.java.query.dsl.Expression.x;
 @Slf4j
 @Setter
 @RequiredArgsConstructor
-public class CouchbaseAuditTrailManager implements AuditTrailManager {
+public class CouchbaseAuditTrailManager extends AbstractAuditTrailManager {
     /**
      * The utils document.
      */
@@ -58,23 +55,12 @@ public class CouchbaseAuditTrailManager implements AuditTrailManager {
      */
     public static final Collection<View> ALL_VIEWS = CollectionUtils.wrap(ALL_RECORDS_VIEW);
 
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-
     private final CouchbaseClientFactory couchbase;
     private final StringSerializer<AuditActionContext> serializer;
     private final boolean asynchronous;
 
-    @Override
-    public void record(final AuditActionContext audit) {
-        if (this.asynchronous) {
-            this.executorService.execute(() -> saveAuditRecord(audit));
-        } else {
-            saveAuditRecord(audit);
-        }
-    }
-
     @SneakyThrows
-    private void saveAuditRecord(final AuditActionContext audit) {
+    protected void saveAuditRecord(final AuditActionContext audit) {
         try (val stringWriter = new StringWriter()) {
             this.serializer.to(stringWriter, audit);
             val id = UUID.randomUUID().toString();
@@ -84,7 +70,7 @@ public class CouchbaseAuditTrailManager implements AuditTrailManager {
     }
 
     @Override
-    public Set<AuditActionContext> getAuditRecordsSince(final LocalDate localDate) {
+    public Set<? extends AuditActionContext> getAuditRecordsSince(final LocalDate localDate) {
         val couchbaseBucket = this.couchbase.getBucket();
         val name = couchbaseBucket.name();
         val statement = select("*").from(i(name)).where(x("whenActionWasPerformed").gte(x("$whenActionWasPerformed")));
