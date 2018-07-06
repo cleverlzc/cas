@@ -40,7 +40,7 @@ public class JpaServiceRegistry extends AbstractServiceRegistry {
     }
 
     @Override
-    public List<RegisteredService> load() {
+    public List<? extends RegisteredService> load() {
         val query = String.format("select r from %s r", ENTITY_NAME);
         val list = this.entityManager.createQuery(query, RegisteredService.class).getResultList();
         list.forEach(s -> publishEvent(new CasRegisteredServiceLoadedEvent(this, s)));

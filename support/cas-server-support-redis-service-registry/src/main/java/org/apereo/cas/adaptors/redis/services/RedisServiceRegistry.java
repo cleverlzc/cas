@@ -63,7 +63,7 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
     }
 
     @Override
-    public List<RegisteredService> load() {
+    public List<? extends RegisteredService> load() {
         try {
             return this.template.keys(getPatternRegisteredServiceRedisKey())
                 .stream()

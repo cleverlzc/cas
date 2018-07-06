@@ -32,7 +32,7 @@ public interface ServiceRegistry {
      *
      * @return the collection of services.
      */
-    List<RegisteredService> load();
+    List<? extends RegisteredService> load();
 
     /**
      * Find service by the numeric id.

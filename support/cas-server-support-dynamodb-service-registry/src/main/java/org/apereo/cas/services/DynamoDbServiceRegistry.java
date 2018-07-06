@@ -1,10 +1,10 @@
 package org.apereo.cas.services;
 
-import lombok.val;
+import org.apereo.cas.support.events.service.CasRegisteredServiceLoadedEvent;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apereo.cas.support.events.service.CasRegisteredServiceLoadedEvent;
+import lombok.val;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class DynamoDbServiceRegistry extends AbstractServiceRegistry {
     }
 
     @Override
-    public List<RegisteredService> load() {
+    public List<? extends RegisteredService> load() {
         val svc = dbTableService.getAll();
         svc.forEach(s -> publishEvent(new CasRegisteredServiceLoadedEvent(this, s)));
         return svc;

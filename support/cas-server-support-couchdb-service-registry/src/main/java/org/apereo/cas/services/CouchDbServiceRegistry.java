@@ -60,7 +60,7 @@ public class CouchDbServiceRegistry extends AbstractServiceRegistry {
     }
 
     @Override
-    public List<RegisteredService> load() {
+    public List<? extends RegisteredService> load() {
         return dbClient.getAll().stream().map(RegisteredServiceDocument::getService).collect(Collectors.toList());
     }
 

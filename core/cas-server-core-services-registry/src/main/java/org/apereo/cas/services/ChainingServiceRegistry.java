@@ -39,7 +39,7 @@ public class ChainingServiceRegistry extends AbstractServiceRegistry {
     }
 
     @Override
-    public List<RegisteredService> load() {
+    public List<? extends RegisteredService> load() {
         return serviceRegistries.stream()
             .map(ServiceRegistry::load)
             .filter(Objects::nonNull)
