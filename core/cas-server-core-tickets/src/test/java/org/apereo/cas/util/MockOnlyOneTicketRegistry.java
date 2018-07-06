@@ -53,7 +53,7 @@ public class MockOnlyOneTicketRegistry implements TicketRegistry {
     }
 
     @Override
-    public Collection<Ticket> getTickets() {
+    public Collection<? extends Ticket> getTickets() {
         throw new UnsupportedOperationException("Not implemented");
     }
 

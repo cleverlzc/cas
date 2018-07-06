@@ -1,7 +1,11 @@
 package org.apereo.cas.ticket.registry;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import org.apereo.cas.couchbase.core.CouchbaseClientFactory;
+import org.apereo.cas.ticket.ServiceTicket;
+import org.apereo.cas.ticket.Ticket;
+import org.apereo.cas.ticket.TicketCatalog;
+import org.apereo.cas.ticket.TicketGrantingTicket;
+import org.apereo.cas.util.CollectionUtils;
 
 import com.couchbase.client.java.document.SerializableDocument;
 import com.couchbase.client.java.view.DefaultView;
@@ -9,15 +13,11 @@ import com.couchbase.client.java.view.View;
 import com.couchbase.client.java.view.ViewQuery;
 import com.couchbase.client.java.view.ViewResult;
 import com.couchbase.client.java.view.ViewRow;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.apereo.cas.couchbase.core.CouchbaseClientFactory;
-import org.apereo.cas.ticket.ServiceTicket;
-import org.apereo.cas.ticket.Ticket;
-import org.apereo.cas.ticket.TicketCatalog;
-import org.apereo.cas.ticket.TicketGrantingTicket;
-import org.apereo.cas.util.CollectionUtils;
 import org.springframework.beans.factory.DisposableBean;
 
 import java.util.ArrayList;
@@ -129,8 +129,8 @@ public class CouchbaseTicketRegistry extends AbstractTicketRegistry implements D
     }
 
     @Override
-    public Collection<Ticket> getTickets() {
-        val tickets = new ArrayList<Ticket>();
+    public Collection<? extends Ticket> getTickets() {
+        val tickets = new ArrayList<>();
         this.ticketCatalog.findAll().forEach(t -> {
             val it = getViewResultIteratorForPrefixedTickets(t.getPrefix() + '-').iterator();
             while (it.hasNext()) {
