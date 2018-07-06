@@ -21,7 +21,7 @@ public interface SamlRegisteredServiceMetadataResolver {
      * @param service the service
      * @return the list
      */
-    Collection<MetadataResolver> resolve(SamlRegisteredService service);
+    Collection<? extends MetadataResolver> resolve(SamlRegisteredService service);
 
     /**
      * Supports this service?
