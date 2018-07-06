@@ -1,12 +1,12 @@
 package org.apereo.cas.adaptors.u2f.storage;
 
-import lombok.val;
+import org.apereo.cas.util.DateTimeUtils;
 
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.yubico.u2f.data.DeviceRegistration;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apereo.cas.util.DateTimeUtils;
+import lombok.val;
 
 import javax.mail.AuthenticationFailedException;
 import java.time.LocalDate;
@@ -43,7 +43,7 @@ public abstract class BaseResourceU2FDeviceRepository extends BaseU2FDeviceRepos
     }
 
     @Override
-    public Collection<DeviceRegistration> getRegisteredDevices(final String username) {
+    public Collection<? extends DeviceRegistration> getRegisteredDevices(final String username) {
         try {
             val devices = readDevicesFromResource();
 
