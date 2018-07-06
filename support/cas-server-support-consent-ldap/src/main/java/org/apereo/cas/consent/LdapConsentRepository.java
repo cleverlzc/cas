@@ -1,16 +1,16 @@
 package org.apereo.cas.consent;
 
-import lombok.val;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.Authentication;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.configuration.model.support.consent.ConsentProperties.Ldap;
 import org.apereo.cas.services.RegisteredService;
 import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.util.LdapUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.ldaptive.ConnectionFactory;
 import org.ldaptive.LdapAttribute;
 import org.ldaptive.LdapEntry;
@@ -69,7 +69,7 @@ public class LdapConsentRepository implements ConsentRepository {
     }
 
     @Override
-    public Collection<ConsentDecision> findConsentDecisions(final String principal) {
+    public Collection<? extends ConsentDecision> findConsentDecisions(final String principal) {
         val entry = readConsentEntry(principal);
         if (entry != null) {
             val consentDecisions = entry.getAttribute(this.ldap.getConsentAttributeName());
@@ -85,7 +85,7 @@ public class LdapConsentRepository implements ConsentRepository {
     }
 
     @Override
-    public Collection<ConsentDecision> findConsentDecisions() {
+    public Collection<? extends ConsentDecision> findConsentDecisions() {
         val entries = readConsentEntries();
         if (entries != null && !entries.isEmpty()) {
             val decisions = new HashSet<ConsentDecision>();

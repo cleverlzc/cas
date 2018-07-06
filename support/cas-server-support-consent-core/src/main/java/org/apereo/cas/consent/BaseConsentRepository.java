@@ -1,15 +1,15 @@
 package org.apereo.cas.consent;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
-
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.apereo.cas.authentication.Authentication;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.services.RegisteredService;
 import org.apereo.cas.util.RandomUtils;
+
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,14 +42,14 @@ public abstract class BaseConsentRepository implements ConsentRepository {
     }
 
     @Override
-    public Collection<ConsentDecision> findConsentDecisions(final String principal) {
+    public Collection<? extends ConsentDecision> findConsentDecisions(final String principal) {
         return this.consentDecisions.stream()
             .filter(d -> d.getPrincipal().equals(principal))
             .collect(Collectors.toSet());
     }
 
     @Override
-    public Collection<ConsentDecision> findConsentDecisions() {
+    public Collection<? extends ConsentDecision> findConsentDecisions() {
         return new ArrayList<>(this.consentDecisions);
     }
 

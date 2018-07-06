@@ -1,12 +1,12 @@
 package org.apereo.cas.consent;
 
-import lombok.val;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apereo.cas.authentication.Authentication;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.services.RegisteredService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -36,13 +36,13 @@ public class MongoDbConsentRepository implements ConsentRepository {
     }
 
     @Override
-    public Collection<ConsentDecision> findConsentDecisions(final String principal) {
+    public Collection<? extends ConsentDecision> findConsentDecisions(final String principal) {
         val query = new Query(Criteria.where("principal").is(principal));
         return this.mongoTemplate.find(query, ConsentDecision.class, this.collectionName);
     }
 
     @Override
-    public Collection<ConsentDecision> findConsentDecisions() {
+    public Collection<? extends ConsentDecision> findConsentDecisions() {
         return this.mongoTemplate.findAll(ConsentDecision.class, this.collectionName);
     }
 
