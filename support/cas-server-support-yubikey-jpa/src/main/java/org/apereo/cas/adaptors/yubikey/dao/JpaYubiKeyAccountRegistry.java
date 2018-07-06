@@ -1,11 +1,11 @@
 package org.apereo.cas.adaptors.yubikey.dao;
 
-import lombok.val;
-
-import lombok.extern.slf4j.Slf4j;
 import org.apereo.cas.adaptors.yubikey.YubiKeyAccount;
 import org.apereo.cas.adaptors.yubikey.YubiKeyAccountValidator;
 import org.apereo.cas.adaptors.yubikey.registry.BaseYubiKeyAccountRegistry;
+
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 /**
  * This is {@link JpaYubiKeyAccountRegistry}.
@@ -51,7 +51,7 @@ public class JpaYubiKeyAccountRegistry extends BaseYubiKeyAccountRegistry {
     }
 
     @Override
-    public Collection<YubiKeyAccount> getAccounts() {
+    public Collection<? extends YubiKeyAccount> getAccounts() {
         try {
             return this.entityManager.createQuery(SELECT_QUERY, YubiKeyAccount.class)
                 .getResultList()
@@ -70,7 +70,7 @@ public class JpaYubiKeyAccountRegistry extends BaseYubiKeyAccountRegistry {
     }
 
     @Override
-    public Optional<YubiKeyAccount> getAccount(final String uid) {
+    public Optional<? extends YubiKeyAccount> getAccount(final String uid) {
         try {
             val account = this.entityManager.createQuery(SELECT_QUERY.concat("where r.username = :username"),
                 YubiKeyAccount.class)
