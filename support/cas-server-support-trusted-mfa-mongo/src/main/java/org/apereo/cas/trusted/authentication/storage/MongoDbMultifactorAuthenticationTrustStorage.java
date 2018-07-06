@@ -1,10 +1,10 @@
 package org.apereo.cas.trusted.authentication.storage;
 
-import lombok.val;
+import org.apereo.cas.trusted.authentication.api.MultifactorAuthenticationTrustRecord;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apereo.cas.trusted.authentication.api.MultifactorAuthenticationTrustRecord;
+import lombok.val;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -58,7 +58,7 @@ public class MongoDbMultifactorAuthenticationTrustStorage extends BaseMultifacto
     }
 
     @Override
-    public Set<MultifactorAuthenticationTrustRecord> get(final LocalDateTime onOrAfterDate) {
+    public Set<? extends MultifactorAuthenticationTrustRecord> get(final LocalDateTime onOrAfterDate) {
         val query = new Query();
         query.addCriteria(Criteria.where("recordDate").gte(onOrAfterDate));
         val results = mongoTemplate.find(query, MultifactorAuthenticationTrustRecord.class, this.collectionName);
@@ -66,7 +66,7 @@ public class MongoDbMultifactorAuthenticationTrustStorage extends BaseMultifacto
     }
 
     @Override
-    public Set<MultifactorAuthenticationTrustRecord> get(final String principal) {
+    public Set<? extends MultifactorAuthenticationTrustRecord> get(final String principal) {
         val query = new Query();
         query.addCriteria(Criteria.where("principal").is(principal));
         val results =
